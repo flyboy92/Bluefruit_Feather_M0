@@ -973,4 +973,6 @@
 // This is the address that indicates a broadcast
 #define RH_BROADCAST_ADDRESS 0xff
 
+
+extern SPIClass SPI2;
 #endif

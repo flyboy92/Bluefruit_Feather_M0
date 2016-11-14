@@ -1,0 +1,7 @@
+MOSI   | PURPLE  | A3  | PA04  |  SERCOM0 PAD[0]
+MISO   | BLUE    | A4  | PA05  |  SERCOM0 PAD[1]
+SCK    | YELLOW  | 9   | PA07  |  SERCOM0 PAD[3]
+-------|---------|-----|       |
+CS     | WHITE   | A1  |       |
+IRQ    | GREEN   | A2  |       |
+RST    | ORANGE  | 6   |       |

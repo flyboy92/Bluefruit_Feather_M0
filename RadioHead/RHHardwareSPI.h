@@ -63,5 +63,5 @@ public:
 
 // Built in default instance
 extern RHHardwareSPI hardware_spi;
-
 #endif
+

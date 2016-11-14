@@ -24,13 +24,9 @@
      
     // Singleton instance of the radio driver
     RH_RF95 rf95(RFM95_CS, RFM95_INT);
-     
+    
     void setup() 
     {
-      // turn off CS for bluetooth chip
-      pinMode(BLUEFRUIT_SPI_CS, OUTPUT);
-      digitalWrite(BLUEFRUIT_SPI_CS, LOW);
-      
       pinMode(RFM95_RST, OUTPUT);
       digitalWrite(RFM95_RST, HIGH);
      
