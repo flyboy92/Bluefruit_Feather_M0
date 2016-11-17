@@ -32,12 +32,14 @@ HardwareSPI SPI(1);
  #define SPI_CLOCK_DIV1  (VARIANT_MCK/5250000)  // 16MHz
 #endif
 
-SPIClass SPI2(&sercom0, A4, 9, A3, SPI_PAD_0_SCK_3, SERCOM_RX_PAD_1);	
+//SPICLASS SPI (&PERIPH_SPI, MISO, SCK, MOSI, PAD TX, PAD RX
+SPIClass SPI2(&sercom0, 18, 9, 17, SPI_PAD_0_SCK_3, SERCOM_RX_PAD_1);	
 
 RHHardwareSPI::RHHardwareSPI(Frequency frequency, BitOrder bitOrder, DataMode dataMode)
     :
     RHGenericSPI(frequency, bitOrder, dataMode)
 {
+	// Set RadioHead SPI pins to correct function
 }
 
 uint8_t RHHardwareSPI::transfer(uint8_t data) 
@@ -81,6 +83,9 @@ void RHHardwareSPI::begin()
  #if (RH_PLATFORM == RH_PLATFORM_ARDUINO) && defined (__arm__) && defined(ARDUINO_ARCH_SAMD)
     // Zero requires begin() before anything else :-)
     SPI2.begin();
+	pinPeripheral(18, PIO_SERCOM);
+	pinPeripheral(9, PIO_SERCOM);
+	pinPeripheral(17, PIO_SERCOM);
  #endif
 
     SPI2.setDataMode(dataMode);

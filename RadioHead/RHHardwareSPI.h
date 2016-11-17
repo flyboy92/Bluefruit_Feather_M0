@@ -9,6 +9,11 @@
 
 #include <RHGenericSPI.h>
 
+ #if (RH_PLATFORM == RH_PLATFORM_ARDUINO) && defined (__arm__) && defined(ARDUINO_ARCH_SAMD)
+    // Zero requires begin() before anything else :-)
+	#include "wiring_private.h" // pinPerpheral() function
+ #endif
+
 /////////////////////////////////////////////////////////////////////
 /// \class RHHardwareSPI RHHardwareSPI.h <RHHardwareSPI.h>
 /// \brief Encapsulate a hardware SPI bus interface

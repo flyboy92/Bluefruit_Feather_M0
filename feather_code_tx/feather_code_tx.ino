@@ -6,13 +6,13 @@
     // level messaging abilities.
     // It is designed to work with the other example Feather9x_RX
      
-    //#include <SPI.h>
+    #include <SPI.h>
     #include <RH_RF95.h>
      
     // for feather m0  
-    #define RFM95_CS A1
+    #define RFM95_CS 15
     #define RFM95_RST 6
-    #define RFM95_INT A2
+    #define RFM95_INT 16
 
     // for feather m0 bluefruit
     #define BLUEFRUIT_SPI_CS               8
@@ -27,10 +27,6 @@
      
     void setup() 
     {
-      // turn off CS for bluetooth chip
-      pinMode(BLUEFRUIT_SPI_CS, OUTPUT);
-      digitalWrite(BLUEFRUIT_SPI_CS, LOW);
-      
       pinMode(RFM95_RST, OUTPUT);
       digitalWrite(RFM95_RST, HIGH);
      
