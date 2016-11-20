@@ -13,6 +13,9 @@
     #define RFM95_CS A1
     #define RFM95_RST 6
     #define RFM95_INT A2
+    #define FRM95_MOSI 10
+    #define FRM95_MISO 11
+    #define FRM95_SCK 12
 
     // for feather m0 bluefruit
     #define BLUEFRUIT_SPI_CS               8
@@ -24,7 +27,7 @@
      
     // Singleton instance of the radio driver
     RH_RF95 rf95(RFM95_CS, RFM95_INT);
-    
+    uint8_t data = 0;
     void setup() 
     {
       pinMode(RFM95_RST, OUTPUT);
@@ -41,7 +44,17 @@
       delay(10);
       digitalWrite(RFM95_RST, HIGH);
       delay(10);
-     
+
+      rf95.init();
+      digitalWrite(RFM95_CS, LOW);
+      SPI2.transfer(0x04);
+      data = SPI2.transfer(0x00);
+      digitalWrite(RFM95_CS, HIGH);
+
+      Serial.print("ADDR 0x04: ");
+      Serial.println(data);
+      delay(100);
+      
       while (!rf95.init()) {
         Serial.println("LoRa radio init failed");
         while (1);

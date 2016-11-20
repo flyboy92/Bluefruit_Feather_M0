@@ -55,7 +55,6 @@ uint8_t RHSPIDriver::spiBurstRead(uint8_t reg, uint8_t* dest, uint8_t len)
 {
     uint8_t status = 0;
     ATOMIC_BLOCK_START;
-    digitalWrite(_slaveSelectPin, LOW);
     status = _spi.transfer(reg & ~RH_SPI_WRITE_MASK); // Send the start address with the write mask off
     while (len--)
 	*dest++ = _spi.transfer(0);

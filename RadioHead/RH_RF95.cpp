@@ -34,13 +34,22 @@ RH_RF95::RH_RF95(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI& spi
 
 bool RH_RF95::init()
 {
+	Serial.print("RHSPIDriver::init() check: ");
     if (!RHSPIDriver::init())
-	return false;
-
+	{
+		Serial.println("failed");
+		return false;
+	}
+	Serial.println("passed");
+	
+	Serial.print("Interrupt Pin Check: ");
     // Determine the interrupt number that corresponds to the interruptPin
     int interruptNumber = digitalPinToInterrupt(_interruptPin);
-    if (interruptNumber == NOT_AN_INTERRUPT)
-	return false;
+    if (interruptNumber == NOT_AN_INTERRUPT){
+		Serial.println("failed");
+		return false;
+	}
+	Serial.println("passed");
 #ifdef RH_ATTACHINTERRUPT_TAKES_PIN_NUMBER
     interruptNumber = _interruptPin;
 #endif
@@ -48,13 +57,20 @@ bool RH_RF95::init()
     // No way to check the device type :-(
     
     // Set sleep mode, so we can also set LORA mode:
+	Serial.print("Sleeping? ");
     spiWrite(RH_RF95_REG_01_OP_MODE, RH_RF95_MODE_SLEEP | RH_RF95_LONG_RANGE_MODE);
     delay(10); // Wait for sleep mode to take over from say, CAD
     // Check we are in sleep mode, with LORA set
+	Serial.print("REG #: ");
+	Serial.println(RH_RF95_REG_01_OP_MODE);
+	
+	Serial.print("Values: ");
+	Serial.println((RH_RF95_MODE_SLEEP | RH_RF95_LONG_RANGE_MODE));
     if (spiRead(RH_RF95_REG_01_OP_MODE) != (RH_RF95_MODE_SLEEP | RH_RF95_LONG_RANGE_MODE))
     {
-//	Serial.println(spiRead(RH_RF95_REG_01_OP_MODE), HEX);
-	return false; // No device present?
+		Serial.print("failed: ");
+		Serial.println(spiRead(RH_RF95_REG_01_OP_MODE), HEX);
+		return false; // No device present?
     }
 
     // Add by Adrien van den Bossche <vandenbo@univ-tlse2.fr> for Teensy
