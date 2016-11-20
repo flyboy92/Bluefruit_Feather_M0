@@ -6,13 +6,11 @@
 #ifndef RHSPIDriver_h
 #define RHSPIDriver_h
 
-#include <RHGenericDriver.h>
-#include <RHHardwareSPI.h>
-
 // This is the bit in the SPI address that marks it as a write
 #define RH_SPI_WRITE_MASK 0x80
+#include <SPI.h>
 
-class RHGenericSPI;
+extern SPIClass SPI2;
 
 /////////////////////////////////////////////////////////////////////
 /// \class RHSPIDriver RHSPIDriver.h <RHSPIDriver.h>
@@ -35,14 +33,14 @@ class RHGenericSPI;
 ///
 /// Application developers are not expected to instantiate this class directly: 
 /// it is for the use of Driver developers.
-class RHSPIDriver : public RHGenericDriver
+class RHSPIDriver
 {
 public:
     /// Constructor
     /// \param[in] slaveSelectPin The controler pin to use to select the desired SPI device. This pin will be driven LOW
     /// during SPI communications with the SPI device that uis iused by this Driver.
     /// \param[in] spi Reference to the SPI interface to use. The default is to use a default built-in Hardware interface.
-    RHSPIDriver(uint8_t slaveSelectPin = SS, RHGenericSPI& spi = hardware_spi);
+    RHSPIDriver(uint8_t slaveSelectPin = SS);
 
     /// Initialise the Driver transport hardware and software.
     /// Make sure the Driver is properly configured before calling init().
@@ -85,8 +83,6 @@ public:
 
 protected:
     /// Reference to the RHGenericSPI instance to use to transfer data with teh SPI device
-    RHGenericSPI&       _spi;
-
     /// The pin number of the Slave Select pin that is used to select the desired device.
     uint8_t             _slaveSelectPin;
 };

@@ -23,9 +23,9 @@ PROGMEM static const RH_RF95::ModemConfig MODEM_CONFIG_TABLE[] =
     
 };
 
-RH_RF95::RH_RF95(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI& spi)
+RH_RF95::RH_RF95(uint8_t slaveSelectPin, uint8_t interruptPin)
     :
-    RHSPIDriver(slaveSelectPin, spi),
+    RHSPIDriver(slaveSelectPin),
     _rxBufValid(0)
 {
     _interruptPin = interruptPin;
@@ -39,24 +39,31 @@ bool RH_RF95::init()
 
     // Determine the interrupt number that corresponds to the interruptPin
     int interruptNumber = digitalPinToInterrupt(_interruptPin);
+	Serial.println("Check interrupt valid");
     if (interruptNumber == NOT_AN_INTERRUPT)
-	return false;
+	{
+		Serial.println("not an interrupt!");
+		return false;
+	}
+	Serial.println("Interrupt Valid");
 #ifdef RH_ATTACHINTERRUPT_TAKES_PIN_NUMBER
     interruptNumber = _interruptPin;
 #endif
 
     // No way to check the device type :-(
     
+	Serial.println("Set sleep mode");
     // Set sleep mode, so we can also set LORA mode:
     spiWrite(RH_RF95_REG_01_OP_MODE, RH_RF95_MODE_SLEEP | RH_RF95_LONG_RANGE_MODE);
     delay(10); // Wait for sleep mode to take over from say, CAD
     // Check we are in sleep mode, with LORA set
     if (spiRead(RH_RF95_REG_01_OP_MODE) != (RH_RF95_MODE_SLEEP | RH_RF95_LONG_RANGE_MODE))
     {
-//	Serial.println(spiRead(RH_RF95_REG_01_OP_MODE), HEX);
-	return false; // No device present?
+		Serial.print ("Not sleeping, REG_01_OP_MODE: ");
+		Serial.println(spiRead(RH_RF95_REG_01_OP_MODE), HEX);
+		return false; // No device present?
     }
-
+	Serial.println("Sleeping");
     // Add by Adrien van den Bossche <vandenbo@univ-tlse2.fr> for Teensy
     // ARM M4 requires the below. else pin interrupt doesn't work properly.
     // On all other platforms, its innocuous, belt and braces
