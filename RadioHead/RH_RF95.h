@@ -565,7 +565,7 @@ public:
     /// On other boards, any digital pin may be used.
     /// \param[in] spi Pointer to the SPI interface object to use. 
     ///                Defaults to the standard Arduino hardware SPI interface
-    RH_RF95(uint8_t slaveSelectPin = SS, uint8_t interruptPin = 2);
+    RH_RF95(uint8_t slaveSelectPin = SS, uint8_t interruptPin = 2, RHGenericSPI& spi = hardware_spi);
   
     /// Initialise the Driver transport hardware and software.
     /// Make sure the Driver is properly configured before calling init().
