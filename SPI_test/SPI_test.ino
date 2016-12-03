@@ -38,13 +38,31 @@ void setup() {
 }
  
 uint8_t data=0;
+uint8_t idx = 0x00;
 void loop() {
+
   digitalWrite(RFM95_CS, LOW);
   mySPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
-  mySPI.transfer(0x03);
+  mySPI.transfer(0x80 | 0x12);
+  data = mySPI.transfer(0x08);
+  mySPI.endTransaction();
+  digitalWrite(RFM95_CS, HIGH);
+
+
+  digitalWrite(RFM95_CS, LOW);
+  mySPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
+  mySPI.transfer(idx);
   data = mySPI.transfer(0x00);
   mySPI.endTransaction();
   digitalWrite(RFM95_CS, HIGH);
-  Serial.println(data);
-  delay(100);
+  
+  Serial.print("Addr: 0x");
+  Serial.print(idx, HEX);
+  Serial.print(", 0x");
+  Serial.println(data, HEX);
+  if(idx == 100){
+    delay(100000);
+    idx = 0;
+  }
+  idx++;
 }

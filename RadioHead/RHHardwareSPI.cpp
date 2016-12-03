@@ -32,8 +32,16 @@ HardwareSPI SPI(1);
  #define SPI_CLOCK_DIV1  (VARIANT_MCK/5250000)  // 16MHz
 #endif
 
+
+#define RFM95_CS A1
+#define RFM95_RST 6
+#define RFM95_INT A2
+#define FRM95_MOSI 10
+#define FRM95_MISO 11
+#define FRM95_SCK 12
+
 //SPICLASS SPI (&PERIPH_SPI, MISO, SCK, MOSI, PAD TX, PAD RX
-SPIClass SPI2(&sercom0, 18, 9, 17, SPI_PAD_0_SCK_3, SERCOM_RX_PAD_1);	
+SPIClass SPI2 (&sercom1, FRM95_MISO, FRM95_SCK, FRM95_MOSI, SPI_PAD_2_SCK_3, SERCOM_RX_PAD_0);
 
 RHHardwareSPI::RHHardwareSPI(Frequency frequency, BitOrder bitOrder, DataMode dataMode)
     :
@@ -83,12 +91,17 @@ void RHHardwareSPI::begin()
  #if (RH_PLATFORM == RH_PLATFORM_ARDUINO) && defined (__arm__) && defined(ARDUINO_ARCH_SAMD)
     // Zero requires begin() before anything else :-)
     SPI2.begin();
-	pinPeripheral(18, PIO_SERCOM);
-	pinPeripheral(9, PIO_SERCOM);
-	pinPeripheral(17, PIO_SERCOM);
  #endif
+ 	pinPeripheral(FRM95_MOSI, PIO_SERCOM);
+	pinPeripheral(FRM95_SCK, PIO_SERCOM);
+	pinPeripheral(FRM95_MISO, PIO_SERCOM);
+	//Serial.println("SERCOM set");
 
-    SPI2.setDataMode(dataMode);
+	//Serial.print("Data Mode: ");
+	//Serial.println(dataMode);
+	//Serial.print("Data Mode0: ");
+	//Serial.println(DataMode0);
+    SPI2.setDataMode(SPI_MODE0);
 #endif
 
 #if (RH_PLATFORM == RH_PLATFORM_ARDUINO) && defined (__arm__) && (defined(ARDUINO_SAM_DUE) || defined(ARDUINO_ARCH_SAMD))
@@ -102,6 +115,12 @@ void RHHardwareSPI::begin()
 	bitOrder = LSBFIRST;
     else
 	bitOrder = MSBFIRST;
+	//Serial.println("bitorder: ");
+	//Serial.println(bitOrder);
+	
+	//Serial.println("bitorderMSB: ");
+	//Serial.println(MSBFIRST);
+	
     SPI2.setBitOrder(bitOrder);
     uint8_t divider;
     switch (_frequency)
@@ -141,8 +160,12 @@ void RHHardwareSPI::begin()
 
     }
 
+	//Serial.print("Clock divider: ");
+	//Serial.println(divider);
+	
     SPI2.setClockDivider(divider);
-    SPI2.begin();
+	////Serial.println("Begin again?");
+    //SPI2.begin();
     // Teensy requires it to be set _after_ begin()
     SPI2.setClockDivider(divider);
 
@@ -240,7 +263,7 @@ void RHHardwareSPI::begin()
     SPI2.begin(frequency, bitOrder, dataMode);
 
 #elif (RH_PLATFORM == RH_PLATFORM_STM32F2) // Photon
-    Serial.println("HERE");
+    //Serial.println("HERE");
     uint8_t dataMode;
     if (_dataMode == DataMode0)
 	dataMode = SPI_MODE0;
