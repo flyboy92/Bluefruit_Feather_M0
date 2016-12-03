@@ -328,7 +328,7 @@ void RH_RF69::setOpMode(uint8_t mode)
 
 void RH_RF69::setModeIdle()
 {
-	Serial.println("Setting Idle Mode    if (_mode != RHModeIdle)
+	if (_mode != RHModeIdle)
     {
 	if (_power >= 18)
 	{
