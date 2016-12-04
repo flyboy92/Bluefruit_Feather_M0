@@ -117,6 +117,21 @@ Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_
       while (! ble.isConnected()) {
         delay(500);
       }
+
+      // LED Activity command is only supported from 0.6.6
+      if ( ble.isVersionAtLeast(MINIMUM_FIRMWARE_VERSION) )
+      {
+        // Change Mode LED Activity
+        Serial.println(F("Change LED activity to " MODE_LED_BEHAVIOUR));
+        ble.sendCommandCheckOK("AT+HWModeLED=" MODE_LED_BEHAVIOUR);
+      }
+
+      // Set module to DATA mode
+      Serial.println( F("Switching to DATA mode!") );
+      ble.setMode(BLUEFRUIT_MODE_DATA);
+      
+      ble.print("Bluetooth initialized");
+      Serial.println("Bluetooth initialized");
     }
     int16_t packetnum = 0;  // packet counter, we increment per xmission
      
