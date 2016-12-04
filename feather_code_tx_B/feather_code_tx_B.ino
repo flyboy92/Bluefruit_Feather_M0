@@ -6,7 +6,7 @@
     // level messaging abilities.
     // It is designed to work with the other example Feather9x_RX
      
-    //#include <SPI.h>
+    #include <SPI.h>
     #include <RH_RF69.h>
      
     // for feather m0  
@@ -77,7 +77,7 @@
       // The default transmitter power is 13dBm, using PA_BOOST.
       // If you are using RFM69/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
       // you can set transmitter powers from 5 to 23 dBm:
-      // rf69.setTxPower(23);
+      rf69.setTxPower(23);
     }
      
     int16_t packetnum = 0;  // packet counter, we increment per xmission
